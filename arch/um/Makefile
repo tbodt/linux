@@ -74,8 +74,8 @@ KBUILD_AFLAGS += $(ARCH_INCLUDE)
 
 USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
 		$(ARCH_INCLUDE) $(MODE_INCLUDE) $(filter -I%,$(CFLAGS)) \
-		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
-		-idirafter $(obj)/include -D__KERNEL__ -D__UM_HOST__
+		-D_FILE_OFFSET_BITS=64 -I $(srctree)/include \
+		-I $(obj)/include -D__KERNEL__ -D__UM_HOST__
 
 #This will adjust *FLAGS accordingly to the platform.
 include $(ARCH_DIR)/Makefile-os-$(OS)
@@ -150,7 +150,7 @@ archclean:
 
 # Generated files
 
-$(HOST_DIR)/um/user-offsets.s: __headers FORCE
+$(HOST_DIR)/um/user-offsets-$(OS).s: __headers FORCE
 	$(Q)$(MAKE) $(build)=$(HOST_DIR)/um $@
 
 define filechk_gen-asm-offsets
@@ -166,7 +166,7 @@ define filechk_gen-asm-offsets
          echo ""; )
 endef
 
-include/generated/user_constants.h: $(HOST_DIR)/um/user-offsets.s
+include/generated/user_constants.h: $(HOST_DIR)/um/user-offsets-$(OS).s
 	$(call filechk,gen-asm-offsets)
 
 export SUBARCH USER_CFLAGS CFLAGS_NO_HARDENING OS DEV_NULL_PATH

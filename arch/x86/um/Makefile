@@ -35,8 +35,8 @@ subarch-$(CONFIG_MODULES) += ../kernel/module.o
 
 USER_OBJS := bugs_$(BITS).o ptrace_user.o fault.o
 
-extra-y += user-offsets.s
-$(obj)/user-offsets.s: c_flags = -Wp,-MD,$(depfile) $(USER_CFLAGS) \
+extra-y += user-offsets-$(OS).s
+$(obj)/user-offsets-$(OS).s: c_flags = -Wp,-MD,$(depfile) $(USER_CFLAGS) \
 	-Iarch/x86/include/generated
 
 UNPROFILE_OBJS := stub_segv.o
